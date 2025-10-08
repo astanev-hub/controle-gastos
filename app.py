@@ -10,6 +10,7 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed"
 )
+st.cache_data.clear()
 
 # Funções
 def carregar_dados():
