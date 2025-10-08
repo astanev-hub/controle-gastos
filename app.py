@@ -3,6 +3,8 @@ import pandas as pd
 from datetime import datetime
 import io
 
+st.set_page_config(page_title="Controle de Gastos", layout="centered", initial_sidebar_state="collapsed")
+
 # Arquivo CSV para armazenar os dados
 ARQUIVO = "gastos.csv"
 
