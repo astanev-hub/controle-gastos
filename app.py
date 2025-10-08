@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+import io
 
 # Arquivo CSV para armazenar os dados
 ARQUIVO = "gastos.csv"
@@ -71,6 +72,31 @@ def main():
 
         st.subheader("Resumo por Responsável")
         st.dataframe(consulta.groupby("Responsável")["Valor"].sum().reset_index())
+
+        if not consulta.empty:
+            st.subheader("📤 Exportar dados")
+            buffer = io.BytesIO()
+            with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
+                consulta.to_excel(writer, index=False, sheet_name="Gastos")
+                writer.save()
+            st.download_button(
+                label="📥 Baixar como Excel",
+                data=buffer.getvalue(),
+                file_name="gastos_exportados.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+
+        st.subheader("📊 Gráfico por Categoria")
+        grafico_categoria = consulta.groupby("Categoria")["Valor"].sum()
+        st.bar_chart(grafico_categoria)
+
+        st.subheader("📊 Gráfico por Responsável")
+        grafico_responsavel = consulta.groupby("Responsável")["Valor"].sum()
+        st.bar_chart(grafico_responsavel)
+
+        st.subheader("📊 Gráfico por Data")
+        grafico_data = consulta.groupby("Data")["Valor"].sum().sort_index()
+        st.line_chart(grafico_data)
 
     elif aba == "Alterar/Excluir":
         st.subheader("Alterar ou Excluir Gastos")
