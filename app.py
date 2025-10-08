@@ -78,7 +78,6 @@ def main():
             buffer = io.BytesIO()
             with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
                 consulta.to_excel(writer, index=False, sheet_name="Gastos")
-                writer.save()
             st.download_button(
                 label="📥 Baixar como Excel",
                 data=buffer.getvalue(),
